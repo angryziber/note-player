@@ -37,8 +37,9 @@
   populateStaff(staff.eq(1), 'e', -5);
 
   function populateStaff(staff, note, halfTones) {
+    var halfToneBase = Math.pow(2, 1/12);
     for (var i = -3; i < 10; i++) {
-      var freq = 110 * Math.pow(Math.pow(2, 1/12), halfTones);
+      var freq = 110 * Math.pow(halfToneBase, halfTones);
       $('<div class="note"></div>').appendTo(staff)
         .css({top: -0.095 * i + 'em', left: 3 + i / 4 * 3 + 'em'})
         .attr('title', note).data('freq', freq);
