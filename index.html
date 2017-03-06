@@ -1,0 +1,55 @@
+<html>
+<style>
+  .staff {
+    position: relative;
+    font-size: 5em;
+  }
+
+  .clef {
+    position: absolute;
+    top: 0;
+  }
+
+  .note {
+    position: absolute;
+    cursor: pointer;
+    width: 0.3em;
+  }
+
+  .note:before {
+    content: '𝅘𝅥 ';
+  }
+</style>
+<body>
+<div class="staff">
+  <div class="clef">𝄞</div>
+  <div class="lines">𝄚𝄚𝄚𝄚𝄚𝄚𝄚𝄚𝄚𝄚𝄚𝄚𝄚</div>
+</div>
+<div class="staff">
+  <div class="clef">𝄢</div>
+  <div class="lines">𝄚𝄚𝄚𝄚𝄚𝄚𝄚𝄚𝄚𝄚𝄚𝄚𝄚</div>
+</div>
+</body>
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+<script>
+  var staff = $('.staff');
+  for (var i = -3; i < 10; i++) {
+    $('<div class="note"></div>').appendTo(staff)
+      .css({top: -0.095*i + 'em', left: 3 + i/4*3 + 'em'})
+      .data('note', 'a' + i);
+  }
+
+  var context = new (window.AudioContext || window.webkitAudioContext)();
+
+  $('.note').on('click', function() {
+    var now = context.currentTime;
+    var oscillator = context.createOscillator();
+    oscillator.connect(context.destination);
+    oscillator.frequency.value = 110;
+    oscillator.start();
+    oscillator.stop(now + 1);
+
+    alert($(this).data('note'));
+  });
+</script>
+</html>
