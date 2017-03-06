@@ -59,9 +59,16 @@
   $('.note').on('click', function() {
     var freq = $(this).data('freq');
     var now = audio.currentTime;
+
+    var gain = audio.createGain();
+    gain.gain.setValueAtTime(1, now);
+    gain.gain.exponentialRampToValueAtTime(0.5, now + 1);
+    gain.connect(audio.destination);
+
     var oscillator = audio.createOscillator();
-    oscillator.connect(audio.destination);
+    oscillator.connect(gain);
     oscillator.frequency.value = freq;
+    oscillator.type = 'square';
     oscillator.start();
     oscillator.stop(now + 1);
     alert(this.title + ' = ' + freq + 'Hz');
