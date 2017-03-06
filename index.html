@@ -33,23 +33,33 @@
 <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
 <script>
   var staff = $('.staff');
-  for (var i = -3; i < 10; i++) {
-    $('<div class="note"></div>').appendTo(staff)
-      .css({top: -0.095*i + 'em', left: 3 + i/4*3 + 'em'})
-      .data('note', 'a' + i);
+  populateStaff(staff.eq(0), 'c');
+  populateStaff(staff.eq(1), 'e');
+
+  function populateStaff(staff, note) {
+    for (var i = -3; i < 10; i++) {
+      $('<div class="note"></div>').appendTo(staff)
+        .css({top: -0.095 * i + 'em', left: 3 + i / 4 * 3 + 'em'})
+        .attr('title', note);
+      note = nextNote(note);
+    }
   }
 
-  var context = new (window.AudioContext || window.webkitAudioContext)();
+  function nextNote(note) {
+    note = String.fromCharCode(note.charCodeAt(0) + 1);
+    if (note == 'h') note = 'a';
+    return note;
+  }
+
+  var audio = new (window.AudioContext || window.webkitAudioContext)();
 
   $('.note').on('click', function() {
-    var now = context.currentTime;
-    var oscillator = context.createOscillator();
-    oscillator.connect(context.destination);
+    var now = audio.currentTime;
+    var oscillator = audio.createOscillator();
+    oscillator.connect(audio.destination);
     oscillator.frequency.value = 110;
     oscillator.start();
     oscillator.stop(now + 1);
-
-    alert($(this).data('note'));
   });
 </script>
 </html>
