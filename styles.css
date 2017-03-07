@@ -1,0 +1,40 @@
+@font-face {
+  font-family: Music;
+  src: url(FreeSerifMusic.woff);
+}
+
+.staff {
+  margin-top: 1em;
+  position: relative;
+  font-family: Music, serif;
+  font-size: 5em;
+}
+
+.clef {
+  position: absolute;
+  top: 0;
+}
+
+.staff .note {
+  position: absolute;
+  cursor: pointer;
+  width: 0.3em;
+}
+
+.staff .note:before {
+  content: '𝅘𝅥 ';
+}
+
+.staff .note.active {
+  color: red;
+}
+
+.notes, .playing {
+  margin-top: 2em;
+  font-size: 2em;
+  text-align: center;
+}
+
+.notes > span {
+  cursor: pointer;
+}
