@@ -3,6 +3,11 @@
   src: url(FreeSerifMusic.woff);
 }
 
+.wrapper {
+  width: 850px;
+  margin: 0 auto;
+}
+
 .staff {
   margin-top: 0.5em;
   position: relative;
@@ -36,6 +41,10 @@
 
 .notes {
   margin-top: 1em;
+}
+
+.playing {
+  margin-top: 0.5em;
 }
 
 .notes > span {
