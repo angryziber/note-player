@@ -4,7 +4,7 @@
 }
 
 .staff {
-  margin-top: 1em;
+  margin-top: 0.5em;
   position: relative;
   font-family: Music, serif;
   font-size: 5em;
@@ -30,9 +30,12 @@
 }
 
 .notes, .playing {
-  margin-top: 2em;
   font-size: 2em;
   text-align: center;
+}
+
+.notes {
+  margin-top: 1em;
 }
 
 .notes > span {
