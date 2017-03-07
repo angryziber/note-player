@@ -27,10 +27,14 @@
     content: '𝅘𝅥 ';
   }
 
-  .playing {
-    margin-top: 0.5em;
+  .notes, .playing {
+    margin-top: 2em;
     font-size: 2em;
     text-align: center;
+  }
+
+  .notes > span {
+    cursor: pointer;
   }
 </style>
 <body>
@@ -41,6 +45,15 @@
 <div class="staff">
   <div class="clef">𝄢</div>
   <div class="lines">𝄚𝄚𝄚𝄚𝄚𝄚𝄚𝄚𝄚𝄚𝄚𝄚𝄚</div>
+</div>
+<div class="notes">
+  <span>c</span> |
+  <span>d</span> |
+  <span>e</span> |
+  <span>f</span> |
+  <span>g</span> |
+  <span>a</span> |
+  <span>b</span>
 </div>
 <div class="playing"></div>
 <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
@@ -70,7 +83,7 @@
 
   var audio = new (window.AudioContext || window.webkitAudioContext)();
 
-  $('.note').on('click', function() {
+  $('.staff .note').on('click', function() {
     var freq = $(this).data('freq');
     var now = audio.currentTime;
 
@@ -87,6 +100,10 @@
     oscillator.stop(now + 1);
 
     $('.playing').show().text(this.title + ' = ' + freq + 'Hz').fadeOut(1000);
+  });
+
+  $('.notes > span').on('click', function() {
+    $('.staff .note[title=' + this.textContent + ']').trigger('click');
   });
 </script>
 </body>
