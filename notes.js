@@ -46,29 +46,36 @@ $('.notes > span').on('click', function() {
 });
 
 function Player(note) {
+  var pub = this;
+  pub.freq = note.data('freq');
   note.addClass('active');
-  this.freq = note.data('freq');
-  var now = audio.currentTime;
+  var startTime = audio.currentTime;
 
   var gain = audio.createGain();
-  gain.gain.setValueAtTime(1, now);
-  gain.gain.exponentialRampToValueAtTime(0.5, now + 1);
+  gain.gain.setValueAtTime(1, startTime);
+  gain.gain.exponentialRampToValueAtTime(0.5, startTime + 1);
   gain.connect(audio.destination);
 
   var oscillator = audio.createOscillator();
   oscillator.connect(gain);
-  oscillator.frequency.value = this.freq;
+  oscillator.frequency.value = pub.freq;
   oscillator.type = 'square';
   oscillator.start();
 
-  $('.playing').show().text(note[0].title + ' = ' + this.freq + 'Hz').fadeOut(1000);
+  $('.playing').show().text(note[0].title + ' = ' + pub.freq + 'Hz').fadeOut(1000);
 
   this.stop = function() {
-    oscillator.stop();
-    note.removeClass('active');
+    var elapsed = audio.currentTime - startTime;
+    if (elapsed < 1) {
+      pub.stopAfter(1 - elapsed);
+    }
+    else {
+      oscillator.stop();
+      note.removeClass('active');
+    }
   };
 
   this.stopAfter = function(sec) {
-    setTimeout(this.stop, sec * 1000);
-  }
+    setTimeout(pub.stop, sec * 1000);
+  };
 }
