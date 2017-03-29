@@ -22,34 +22,53 @@ function nextNote(note) {
 }
 
 var audio = new (window.AudioContext || window.webkitAudioContext)();
+var players = [];
 
-$('.staff .note').on('click', function() {
-  play($(this), 1);
+var notes = $('.staff .note');
+notes.on('click', function() {
+  new Player($(this)).stopAfter(1);
+});
+notes.on('touchstart', function(e) {
+  var note = $(this);
+  players[note.index()] = new Player(note);
+  return false;
+});
+notes.on('touchend', function() {
+  var note = $(this);
+  var i = note.index();
+  players[i].stop();
+  delete players[i];
+  return false;
 });
 
 $('.notes > span').on('click', function() {
   $('.staff .note[title=' + this.textContent + ']').trigger('click');
 });
 
-function play(note, sec) {
+function Player(note) {
   note.addClass('active');
-  var freq = note.data('freq');
+  this.freq = note.data('freq');
   var now = audio.currentTime;
 
   var gain = audio.createGain();
   gain.gain.setValueAtTime(1, now);
-  gain.gain.exponentialRampToValueAtTime(0.25, now + sec);
+  gain.gain.exponentialRampToValueAtTime(0.5, now + 1);
   gain.connect(audio.destination);
 
   var oscillator = audio.createOscillator();
   oscillator.connect(gain);
-  oscillator.frequency.value = freq;
+  oscillator.frequency.value = this.freq;
   oscillator.type = 'square';
   oscillator.start();
-  oscillator.stop(now + sec);
 
-  $('.playing').show().text(note[0].title + ' = ' + freq + 'Hz').fadeOut(sec * 1000);
-  setTimeout(function() {
+  $('.playing').show().text(note[0].title + ' = ' + this.freq + 'Hz').fadeOut(1000);
+
+  this.stop = function() {
+    oscillator.stop();
     note.removeClass('active');
-  }, sec * 1000);
+  };
+
+  this.stopAfter = function(sec) {
+    setTimeout(this.stop, sec * 1000);
+  }
 }
