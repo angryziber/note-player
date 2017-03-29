@@ -24,13 +24,21 @@ function nextNote(note) {
 var audio = new (window.AudioContext || window.webkitAudioContext)();
 
 $('.staff .note').on('click', function() {
-  var note = $(this).addClass('active');
+  play($(this), 1);
+});
+
+$('.notes > span').on('click', function() {
+  $('.staff .note[title=' + this.textContent + ']').trigger('click');
+});
+
+function play(note, sec) {
+  note.addClass('active');
   var freq = note.data('freq');
   var now = audio.currentTime;
 
   var gain = audio.createGain();
   gain.gain.setValueAtTime(1, now);
-  gain.gain.exponentialRampToValueAtTime(0.25, now + 1);
+  gain.gain.exponentialRampToValueAtTime(0.25, now + sec);
   gain.connect(audio.destination);
 
   var oscillator = audio.createOscillator();
@@ -38,14 +46,10 @@ $('.staff .note').on('click', function() {
   oscillator.frequency.value = freq;
   oscillator.type = 'square';
   oscillator.start();
-  oscillator.stop(now + 1);
+  oscillator.stop(now + sec);
 
-  $('.playing').show().text(this.title + ' = ' + freq + 'Hz').fadeOut(1000);
+  $('.playing').show().text(note[0].title + ' = ' + freq + 'Hz').fadeOut(sec * 1000);
   setTimeout(function() {
     note.removeClass('active');
-  }, 1000);
-});
-
-$('.notes > span').on('click', function() {
-  $('.staff .note[title=' + this.textContent + ']').trigger('click');
-});
+  }, sec * 1000);
+}
