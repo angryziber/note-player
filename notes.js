@@ -49,11 +49,8 @@ class StaffPlayer {
       noteDiv.dataset.freq = freq
       staff.appendChild(noteDiv)
 
-      if (note === 'e' || note === 'b') {
-        halfTones++
-      } else {
-        halfTones += 2
-      }
+      if (note === 'e' || note === 'b') halfTones++
+      else halfTones += 2
       note = this.nextNote(note)
     }
   }
