@@ -71,14 +71,15 @@ function Player(note) {
   const startTime = audio.currentTime
 
   const gain = audio.createGain()
-  gain.gain.setValueAtTime(1, startTime)
-  gain.gain.exponentialRampToValueAtTime(0.5, startTime + 1)
+  const adjustedGain = Math.max(0.2, 440 / pub.freq) * 5
+  gain.gain.setValueAtTime(adjustedGain, startTime)
+  gain.gain.exponentialRampToValueAtTime(adjustedGain * 0.5, startTime + 1)
   gain.connect(audio.destination)
 
   const oscillator = audio.createOscillator()
   oscillator.connect(gain)
   oscillator.frequency.value = pub.freq
-  oscillator.type = 'square'
+  oscillator.type = 'sine'
   oscillator.start()
 
   const playingDisplay = document.querySelector('.playing')
